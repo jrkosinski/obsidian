@@ -1,0 +1,1 @@
+export { ILogRepository } from './log';
