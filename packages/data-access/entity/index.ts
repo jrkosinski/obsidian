@@ -42,7 +42,7 @@ export class EscrowRecord {
     arbitrationModule: string;
 
     @Column({ name: 'arbiters_required' })
-    arbitersRequired: number; // The number of arbiters consent required to release or refund the escrow in absence of payer consent
+    quorum: number; // The number of arbiters consent required to release or refund the escrow in absence of payer consent
 
     @Column({ name: 'created_at', type: 'timestamptz', nullable: false })
     createdAt?: Date;

@@ -6,7 +6,7 @@ export type EscrowInput = {
     payer: string; // The address of the payer
     arbiters: string[]; // The addresses of the arbiters
     currency: string; //The currency addres, 0x0 for native
-    arbitersRequired: number; // The number of arbiters consent required to release or refund the escrow in absence of payer consent
+    quorum: number; // The number of arbiters consent required to release or refund the escrow in absence of payer consent
     arbitrationModule: string; // The IArbitrationModule contract that has the logic rules for arbitration
     amount: string; // The total amount of the escrow
     startTime: number; // The timestamp when the escrow period begins

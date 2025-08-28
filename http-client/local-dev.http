@@ -1,0 +1,197 @@
+###
+// Create an escrow on chain PASS
+POST http://localhost:3090/api/v1/escrow
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc", 
+    "id": "aurelius44",
+    "payer": "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A",
+    "receiver": "0x1542612fee591eD35C05A3E980bAB325265c06a3",
+    "arbiters": [],
+    "arbitersRequired": 0,
+    "amount": "100",
+    "currency": "0x0000000000000000000000000000000000000000",
+    "startTime": 0,
+    "endTime": 0,
+    "arbitrationModule": "0x0000000000000000000000000000000000000000"
+}
+
+###
+// create an escrow in database only PASS
+POST http://localhost:3030/api/v1/escrow
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "payer": "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A",
+    "receiver": "0x1542612fee591eD35C05A3E980bAB325265c06a3",
+    "arbiters": [],
+    "arbitersRequired": 0,
+    "amount": "100",
+    "currency": "0x0000000000000000000000000000000000000000",
+    "startTime": 0,
+    "endTime": 0,
+    "arbitrationModule": "0x0000000000000000000000000000000000000000"
+}
+
+###
+// create and deploy an escrow PASS
+POST http://localhost:3030/api/v1/escrow
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "payer": "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A",
+    "receiver": "0x1542612fee591eD35C05A3E980bAB325265c06a3",
+    "arbiters": [],
+    "arbitersRequired": 0,
+    "amount": "100",
+    "currency": "0x0000000000000000000000000000000000000000",
+    "startTime": 0,
+    "endTime": 0,
+    "arbitrationModule": "0x0000000000000000000000000000000000000000",
+    "deploy": true
+}
+
+###
+// create/deploy an escrow with arbiters FAIL (arbiters not returned)
+#POST http://localhost:3030/api/v1/escrow
+#Content-Type: application/json
+#{
+#    "chainId": "11155111",
+#    "escrowAddress": "0x5c4B61cD35bac3A269e6F917DB772e3E54491801",
+#    "payer": "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A",
+#    "receiver": "0x1542612fee591eD35C05A3E980bAB325265c06a3",
+#    "arbiters": ["0x1542612fee591eD35C05A3E980bAB325265c06a3", "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A"],
+#    "arbitersRequired": 2,
+#    "amount": "100",
+#    "currency": "0x0000000000000000000000000000000000000000",
+#    "startTime": 0,
+#    "endTime": 0,
+#    "arbitrationModule": "0x0000000000000000000000000000000000000000",
+#    "deploy": false
+#}
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"chainId": "11155111","escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc","payer": "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A", "receiver": "0x1542612fee591eD35C05A3E980bAB325265c06a3","arbiters": ["0x1542612fee591eD35C05A3E980bAB325265c06a3", "0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A"],"arbitersRequired": 2,"amount": "100","currency": "0x0000000000000000000000000000000000000000","startTime": 0,"endTime": 0,"arbitrationModule": "0x0000000000000000000000000000000000000000","deploy": false}' \
+  http://localhost:3030/api/v1/escrow
+
+###
+// deploy an escrow that's already in the db PASS (but should return full record)
+POST http://localhost:3030/api/v1/escrow/e7f6b718-8c9b-48f4-a113-b9261972be3d/deployment
+Content-Type: application/json
+
+{
+}
+
+###
+// deploy an invalid escrow PASS (404)
+POST http://localhost:3030/api/v1/escrow/deployment/64c1147f-7575-4f8a-b4e3-7938a48d24a1
+Content-Type: application/json
+
+{
+}
+
+###
+// deploy a duplicate escrow PASS (but returns 500)
+POST http://localhost:3030/api/v1/escrow/deployment/ef96a823-83c8-4bcb-8c7e-dc7aa92fadc9
+Content-Type: application/json
+
+{
+}
+
+###
+// deploy a relay node on an escrow (on chain only) PASS
+POST http://localhost:3090/api/v1/relay
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "escrowId": "ef96a823-83c8-4bcb-8c7e-dc7aa92fadc9"
+}
+
+###
+// Deploy a relay node to an invalid escrow PASS
+POST http://localhost:3090/api/v1/relay
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "escrowId": "4c76095e-edb1-4a61-909d-4e8362415723"
+}
+
+###
+// Deploy a relay node PASS
+POST http://localhost:3030/api/v1/relay
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "escrowId": "ef96a823-83c8-4bcb-8c7e-dc7aa92fadc9"
+}
+
+###
+// Deploy a relay node on invalid escrow PASS
+POST http://localhost:3030/api/v1/relay
+Content-Type: application/json
+
+{
+    "chainId": "11155111",
+    "chainType": "EVM",
+    "escrowAddress": "0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc",
+    "escrowId": "64c1147f-7575-4f8a-b4e3-7938a48d24a1"
+}
+
+###
+// Get an escrow on chain only PASS
+GET http://localhost:3090/api/v1/escrow?chainId=11155111&escrowAddress=0xb89f7b81C3B3D680CB33e267b7C84AC7f398Fbfc&escrowId=f256a2c1-bcf4-4003-9a0e-38ead7995eac
+Content-Type: application/json
+
+###
+// Get an escrow in full detail PASS
+GET http://localhost:3030/api/v1/escrow/ef96a823-83c8-4bcb-8c7e-dc7aa92fadc9?full=true
+Content-Type: application/json
+
+###
+// Get an escrow in partial detail PASS
+GET http://localhost:3030/api/v1/escrow/ef96a823-83c8-4bcb-8c7e-dc7aa92fadc9
+Content-Type: application/json
+
+###
+// Get an invalid escrow PASS
+GET http://localhost:3030/api/v1/escrow/f256a2c1-bcf4-4003-9a0e-38ead7995eac
+Content-Type: application/json
+
+###
+// Get an invalid escrow with invalid UUID format PASS
+GET http://localhost:3030/api/v1/escrow/f256a2c1-bcf4-4003-9a0e-38ead7995eaceee
+Content-Type: application/json
+
+###
+// List escrows PASS
+GET http://localhost:3030/api/v1/escrow/
+Content-Type: application/json
+
+###
+// List escrows PASS
+GET http://localhost:3030/api/v1/escrows/
+Content-Type: application/json
+
+###
+// List escrows filter by payer/receiver
+GET http://localhost:3030/api/v1/escrows?filter=0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A
+Content-Type: application/json
+
+###
+// List escrows filter by contract address
+GET http://localhost:3030/api/v1/escrows?filter=0x8bA35513C3F5ac659907D222e3DaB38b20f8F52A
+Content-Type: application/json
+
